@@ -326,4 +326,139 @@ describe('Update Builder', () => {
       }).toThrow(TypeError)
     })
   })
+
+  describe('Remove Values', () => {
+    test('it should build update query that remove a key', () => {
+      expect(
+        UpdateBuilder({
+          params,
+          updates: {
+            remove: [
+              ['something'],
+            ]
+          }
+        })
+      ).toEqual({
+        UpdateExpression: 'REMOVE #something',
+        ConditionExpression: undefined,
+        ExpressionAttributeNames: {
+          '#something': 'something'
+        },
+        ExpressionAttributeValues: {},
+        ...params
+      })
+    })
+
+    test('it should build update query that removes multiple keys', () => {
+      expect(
+        UpdateBuilder({
+          params,
+          updates: {
+            remove: [
+              ['something'],
+              ['another_thing'],
+              ['number']
+            ]
+          }
+        })
+      ).toEqual({
+        UpdateExpression: 'REMOVE #something, #another_thing, #number',
+        ConditionExpression: undefined,
+        ExpressionAttributeNames: {
+          '#something': 'something',
+          '#another_thing': 'another_thing',
+          '#number': 'number'
+        },
+        ExpressionAttributeValues: {},
+        ...params
+      })
+    })
+
+    test('it should build update query that removes a nested key', () => {
+      expect(
+        UpdateBuilder({
+          params,
+          updates: {
+            remove: [
+              ['something.nested'],
+            ]
+          }
+        })
+      ).toEqual({
+        UpdateExpression: 'REMOVE #something.#nested',
+        ConditionExpression: undefined,
+        ExpressionAttributeNames: {
+          '#something': 'something',
+          '#nested': 'nested'
+        },
+        ExpressionAttributeValues: {},
+        ...params
+      })
+    })
+
+    test('it should build update query that removes multiple nested keys from the same object', () => {
+      expect(
+        UpdateBuilder({
+          params,
+          updates: {
+            remove: [
+              ['something.nested'],
+              ['something.here'],
+              ['something.updated']
+            ]
+          }
+        })
+      ).toEqual({
+        UpdateExpression: 'REMOVE #something.#nested, #something.#here, #something.#updated',
+        ConditionExpression: undefined,
+        ExpressionAttributeNames: {
+          '#something': 'something',
+          '#nested': 'nested',
+          '#here': 'here',
+          '#updated': 'updated'
+        },
+        ExpressionAttributeValues: {},
+        ...params
+      })
+    })
+
+    test('it should build update query that removes multiple nested keys from different objects', () => {
+      expect(
+        UpdateBuilder({
+          params,
+          updates: {
+            remove: [
+              ['something.nested'],
+              ['something.here'],
+              ['object.other'],
+              ['object.here']
+            ]
+          }
+        })
+      ).toEqual({
+        UpdateExpression: 'REMOVE #something.#nested, #something.#here, #object.#other, #object.#here',
+        ConditionExpression: undefined,
+        ExpressionAttributeNames: {
+          '#something': 'something',
+          '#nested': 'nested',
+          '#here': 'here',
+          '#object': 'object',
+          '#other': 'other'
+        },
+        ExpressionAttributeValues: {},
+        ...params
+      })
+    })
+
+    test('it requires at least one value to remove', () => {
+      expect(() => {
+        UpdateBuilder({
+          params,
+          updates: {
+            remove: []
+          }
+        })
+      }).toThrow(TypeError)
+    })
+  })
 })

@@ -3,10 +3,10 @@ const { toNameKey, toValueKey } = require('../helpers/keys')
 const toUpdateExpression = (array, operator = '') => {
   return array.map(([key]) =>
     `${toNameKey(key)} ${operator} ${toValueKey(key)}`
-  ).join(', ')
+  ).join(', ').replace(/  +/g, ' ')
 }
 
-module.exports = ({ add = [], set = [], remove = [], del = [] }) => {
+module.exports = ({ add = [], set = [], del = [], remove = [] }) => {
   const updateParts = []
 
   if (add && add.length) {
@@ -17,17 +17,17 @@ module.exports = ({ add = [], set = [], remove = [], del = [] }) => {
     updateParts.push(`SET ${toUpdateExpression(set, '=')}`)
   }
 
-  if (remove && remove.length) {
-    updateParts.push(`REMOVE ${remove.map(([key]) => toNameKey(key))}`)
-  }
-
   if (del && del.length) {
     updateParts.push(`DELETE ${toUpdateExpression(del)}`)
+  }
+
+  if (remove && remove.length) {
+    updateParts.push(`REMOVE ${remove.map(([key]) => toNameKey(key)).join(', ')}`)
   }
 
   if (updateParts.length === 0) {
     throw new TypeError('You must update the item in some way.')
   }
 
-  return updateParts.join(' ').replace(/  +/g, ' ')
+  return updateParts.join(' ')
 }

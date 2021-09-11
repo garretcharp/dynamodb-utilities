@@ -32,5 +32,5 @@ module.exports = ({ equals = [], contains = [], exists = [], notExists = [] }) =
     conditionParts.push(`(${notExists.map(toNotExistsExpression).join(' and ')})`)
   }
 
-  return conditionParts.length ? conditionParts.join(' AND ').replace(/  +/g, ' ') : undefined
+  return conditionParts.length ? conditionParts.join(' AND ') : undefined
 }

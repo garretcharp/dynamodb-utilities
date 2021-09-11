@@ -6,9 +6,13 @@ module.exports = ({
 }) => {
   const attributeValues = {}
 
-    ;[...add, ...set, ...del, ...equals, ...contains].forEach(([key, value]) => {
-      attributeValues[toValueKey(key)] = value
-    })
+  ;[...add, ...set, ...del, ...equals, ...contains].forEach(([key, value]) => {
+    if (attributeValues[toValueKey(key)]) {
+      throw new TypeError('Cannot create query, 2 or more values use the same calculated value key')
+    }
+
+    attributeValues[toValueKey(key)] = value
+  })
 
   return attributeValues
 }
