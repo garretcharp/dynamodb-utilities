@@ -29,5 +29,5 @@ module.exports = ({ add = [], set = [], remove = [], del = [] }) => {
     throw new TypeError('You must update the item in some way.')
   }
 
-  return updateParts.join(' ')
+  return updateParts.join(' ').replace(/  +/g, ' ')
 }

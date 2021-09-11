@@ -1,4 +1,4 @@
-const { Array, Record, Tuple, String, Number, Unknown } = require('runtypes')
+const { Array, Dictionary, Record, Tuple, String, Number, Unknown, Union } = require('runtypes')
 const {
   getUpdateExpression,
   getConditionExpression,
@@ -6,12 +6,21 @@ const {
   getExpressionAttributeValues
 } = require('./expressions')
 
-const StringUnknownTuple = Array(Tuple(String, Unknown)).optional()
-const StringTuple = Array(Tuple(String)).optional()
+const KeyString = String.withConstraint(
+  v => !v.includes(' ') || 'Cannot include a space in key value',
+  { name: 'KeyValue' }
+)
+const StringUnknownTuple = Array(Tuple(KeyString, Unknown)).optional()
+const StringTuple = Array(Tuple(KeyString)).optional()
 
 const DynamoUpdate = Record({
+  params: Record({
+    TableName: String,
+    Key: Dictionary(KeyString, Union(String, Number))
+  }).asPartial(),
+
   updates: Record({
-    add: Array(Tuple(String, Number)).optional(),
+    add: Array(Tuple(KeyString, Number)).optional(),
     set: StringUnknownTuple,
     remove: StringTuple,
     del: StringUnknownTuple
@@ -34,6 +43,7 @@ module.exports = (op) => {
     UpdateExpression: getUpdateExpression(op.updates),
     ConditionExpression: getConditionExpression(conditions),
     ExpressionAttributeNames: getExpressionAttributeNames({ ...op.updates, ...conditions }),
-    ExpressionAttributeValues: getExpressionAttributeValues({ ...op.updates, ...conditions })
+    ExpressionAttributeValues: getExpressionAttributeValues({ ...op.updates, ...conditions }),
+    ...op.params
   }
 }
