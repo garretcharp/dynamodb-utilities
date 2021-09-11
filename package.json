@@ -1,15 +1,14 @@
 {
-  "name": "DynamoDb",
+  "name": "dynamodb-utilities",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "scripts": {},
   "keywords": [],
-  "author": "",
+  "author": "Garret Harp",
   "license": "ISC",
   "dependencies": {
+    "np": "^7.5.0",
     "runtypes": "^6.4.0"
   }
 }
