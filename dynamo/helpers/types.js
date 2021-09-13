@@ -14,9 +14,9 @@ const list = Array(Unknown)
 const map = Record().asPartial()
 
 // Set Types
-const stringSet = Array(string).withConstrain(a => a.length > 0 || 'Set cannot be empty')
-const numberSet = Array(number).withConstrain(a => a.length > 0 || 'Set cannot be empty')
-const binarySet = Array(binary).withConstrain(a => a.length > 0 || 'Set cannot be empty')
+const stringSet = Array(string).withConstraint(a => a.length > 0 || 'Set cannot be empty')
+const numberSet = Array(number).withConstraint(a => a.length > 0 || 'Set cannot be empty')
+const binarySet = Array(binary).withConstraint(a => a.length > 0 || 'Set cannot be empty')
 
 module.exports = {
   key: Dictionary(string, Union(string, number, binary)).withConstraint(d => [1, 2].includes(Object.keys(d).length) || 'Dynamo key requires 1 or 2 attributes'),
