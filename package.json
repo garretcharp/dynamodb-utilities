@@ -1,6 +1,6 @@
 {
   "name": "dynamodb-utilities",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Simple dynamodb utility functions",
   "main": "index.js",
   "scripts": {

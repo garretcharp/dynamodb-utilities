@@ -19,7 +19,7 @@ const numberSet = Array(number).withConstrain(a => a.length > 0 || 'Set cannot b
 const binarySet = Array(binary).withConstrain(a => a.length > 0 || 'Set cannot be empty')
 
 module.exports = {
-  key: Dictionary(string, Union(string, number, binary)).withConstrain(d => [1, 2].includes(Object.keys(d).length) || 'Dynamo key requires 1 or 2 attributes'),
+  key: Dictionary(string, Union(string, number, binary)).withConstraint(d => [1, 2].includes(Object.keys(d).length) || 'Dynamo key requires 1 or 2 attributes'),
   set: { string: stringSet, number: numberSet, binary: binarySet },
   scalar: { number, string, binary, boolean, nulled },
   document: { list, map }
